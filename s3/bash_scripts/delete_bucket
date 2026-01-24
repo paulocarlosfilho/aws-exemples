@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Validação: agora precisamos de DOIS argumentos
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Erro: Use assim: ./delete_file_bucket NOME_DO_BUCKET NOME_DO_ARQUIVO"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+FILE_NAME=$2
+
+echo "Apagando o arquivo $FILE_NAME do bucket $BUCKET_NAME..."
+
+aws s3api delete-object --bucket "$BUCKET_NAME" --key "$FILE_NAME"

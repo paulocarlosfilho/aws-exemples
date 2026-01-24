@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+
+# Verifica se o nome do bucket foi passado
+if [ -z "$1" ]; then
+    echo "Erro: Você precisa informar o nome do bucket para listar os objetos."
+    echo "Exemplo: ./list_objects meu-bucket-teste"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+
+echo "Listando objetos no bucket: $BUCKET_NAME..."
+
+# Comando para listar objetos de forma organizada
+aws s3api list-objects --bucket "$BUCKET_NAME" --output table --query 'Contents[].{Key: Key, Size: Size, LastModified: LastModified}'

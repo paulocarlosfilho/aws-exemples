@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Verifica se os dois argumentos foram passados
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Erro: Você precisa informar o bucket e o arquivo."
+    echo "Exemplo: ./delete_file_bucket meu-bucket-teste foto.jpg"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+FILE_NAME=$2
+
+echo "Tentando apagar o arquivo '$FILE_NAME' do bucket '$BUCKET_NAME'..."
+
+# Comando para deletar o objeto (arquivo)
+aws s3api delete-object --bucket "$BUCKET_NAME" --key "$FILE_NAME"

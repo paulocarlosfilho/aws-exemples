@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Verifica se o bucket e o arquivo foram passados
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Erro: Você precisa informar o bucket e o caminho do arquivo local."
+    echo "Exemplo: ./put_object meu-bucket-teste ./meu-arquivo.txt"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+LOCAL_FILE=$2
+# Pega apenas o nome do arquivo (sem o caminho da pasta) para usar como chave no S3
+FILE_KEY=$(basename "$LOCAL_FILE")
+
+echo "Enviando '$LOCAL_FILE' para 's3://$BUCKET_NAME/$FILE_KEY'..."
+
+# Comando para fazer o upload do arquivo
+aws s3api put-object --bucket "$BUCKET_NAME" --key "$FILE_KEY" --body "$LOCAL_FILE"

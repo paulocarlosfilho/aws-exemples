@@ -1,0 +1,23 @@
+# Ignore folder 0 and its contents
+0/
+*aws_senhas*
+
+# Secrets
+.env
+.env.local
+.aws/
+
+# AWS CLI installation files
+awscliv2.zip
+aws/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.bak

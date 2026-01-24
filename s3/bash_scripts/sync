@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Verifica se o bucket e a pasta foram passados
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Erro: Você precisa informar o bucket e a pasta local para sincronizar."
+    echo "Exemplo: ./sync meu-bucket-teste ./minha-pasta-de-fotos"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+LOCAL_FOLDER=$2
+
+echo "Sincronizando a pasta '$LOCAL_FOLDER' com o bucket 's3://$BUCKET_NAME'..."
+
+# O comando sync é inteligente: ele só copia o que mudou ou o que é novo
+aws s3 sync "$LOCAL_FOLDER" "s3://$BUCKET_NAME" --delete
