@@ -25,7 +25,9 @@ aws s3 ls
 
 # Listar buckets usando s3api (retorno em JSON detalhado)
 aws s3api list-buckets
-```
+
+# Nota: O S3 pode ser usado no powershell, muito mais facil pois ele usa os objetos ao invés de texto.
+
 # Remover um bucket vazio (rb = remove bucket)
 aws s3 rb s3://nome-do-seu-bucket-unico
 ```
@@ -45,6 +47,36 @@ aws s3 cp s3://nome-do-seu-bucket-unico/arquivo.txt .
 aws s3 rm s3://nome-do-seu-bucket-unico/nome-da-pasta --recursive
 ```
 
+---
+
+# Usando o powershell
+
+1. Dependências e PowerShell
+```
+apk update
+apk add --no-cache \
+    ca-certificates less ncurses-terminfo-base krb5-libs libgcc \
+    libintl libssl3 libstdc++ tzdata userspace-rcu zlib icu-libs \
+    curl unzip bash gcompat
+
+apk add --no-cache powershell --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+```
+
+2. AWS CLI v2
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip -q awscliv2.zip
+./aws/install
+rm -rf awscliv2.zip aws/
+```
+3. AWS Tools + Módulo S3 (Já deixa o CRUD pronto)
+```
+pwsh -Command "
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted;
+    Install-Module -Name AWS.Tools.Installer -Force -Scope CurrentUser;
+    Install-AWSToolsModule S3 -Force -Scope CurrentUser
+"
+```
 ---
 
 ## IAM & Autenticação

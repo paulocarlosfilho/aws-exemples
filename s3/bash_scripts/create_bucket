@@ -1,17 +1,31 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
+echo "== Create Bucket =="
+set -euo pipefail
 
-# Check for the bucket name
-if [ -z "$1" ]; then
-    echo "There needs to be a bucket name eg. ./bucket my-bucket-paulocarlos-teste"
+# Script: Criar um novo bucket S3
+# Uso: ./create_bucket <nome-do-bucket>
+# Exemplo: ./create_bucket meu-bucket-unico-12345
+
+if [ -z "${1:-}" ]; then
+    echo "❌ Erro: Nome do bucket não informado"
+    echo "Uso: $0 <nome-do-bucket>"
+    echo "Exemplo: $0 meu-bucket-unico-12345"
     exit 1
 fi
 
-BUCKET_NAME=$1
+BUCKET_NAME="$1"
 
-echo aws s3api create-bucket --bucket $BUCKET_NAME
+# Validar se bucket já existe
+if aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
+    echo "❌ Erro: Bucket '$BUCKET_NAME' já existe"
+    exit 1
+fi
 
-aws s3api create-bucket --bucket $BUCKET_NAME \
---query 'Location' \
---output text | sed 's|^.*//||'
+echo "📦 Criando bucket: $BUCKET_NAME..."
+aws s3api create-bucket --bucket "$BUCKET_NAME" \
+  --query 'Location' \
+  --output text | sed 's|^.*//||' || exit 1
+
+echo "✅ Bucket criado com sucesso!"
 
 

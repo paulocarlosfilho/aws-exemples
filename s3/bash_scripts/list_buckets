@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+echo "== List of 5 Buckets =="
+set -euo pipefail
+
+# Script: Listar buckets S3
+# Uso: ./list_buckets
+# Exemplo: ./list_buckets
+
+echo "📋 Listando buckets S3..."
+aws s3api list-buckets | jq -r '.Buckets | sort_by(.CreationDate) | reverse | .[] | [.Name, .CreationDate] | @tsv' | head -n 5
+
+# Para listar um bucket específico (substitua 'nome-do-bucket' pelo nome real):
+# aws s3api list-buckets --query "Buckets[?Name=='nome-do-bucket']" --output json | jq -r '.[] | [.Name, .CreationDate] | @tsv'

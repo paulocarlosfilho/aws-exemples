@@ -1,1 +1,38 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
+
+echo "== put_object =="
+set -euo pipefail
+
+# Script: Gerar arquivos de teste para upload em S3
+# Uso: ./put_bucket [quantidade-de-arquivos]
+# Exemplo: ./put_bucket 10
+# Nota: Arquivos são salvos em /tmp/s3-bash-scripts
+
+NUM_FILES="${1:-7}"
+OUTPUT_DIR="/tmp/s3-bash-scripts"
+
+# Validar se entrada é número
+if ! [[ "$NUM_FILES" =~ ^[0-9]+$ ]] || [ "$NUM_FILES" -lt 1 ]; then
+    echo "❌ Erro: Quantidade deve ser um número positivo"
+    echo "Uso: $0 [quantidade]"
+    echo "Exemplo: $0 10"
+    exit 1
+fi
+
+# Criar diretório
+mkdir -p "$OUTPUT_DIR"
+echo "📁 Criando $NUM_FILES arquivos de teste em $OUTPUT_DIR"
+echo ""
+
+for ((i=1; i<=NUM_FILES; i++)); do
+    FILENAME="$OUTPUT_DIR/test-file-$i.bin"
+    FILE_SIZE=$((RANDOM % 512 + 64)) # Entre 64KB e 576KB
+    
+    echo -n "Gerando arquivo $i/$NUM_FILES ($FILE_SIZE KB)... "
+    dd if=/dev/urandom of="$FILENAME" bs=1024 count="$FILE_SIZE" 2>/dev/null
+    echo "✅"
+done
+
+echo ""
+echo "✅ Pronto! Arquivos gerados em: $OUTPUT_DIR"
+echo "💡 Próximo passo: ./sync meu-bucket $OUTPUT_DIR"

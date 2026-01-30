@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Script: Deletar um objeto (arquivo) de um bucket S3
+# Uso: ./delete_object <nome-do-bucket> <nome-do-arquivo>
+# Exemplo: ./delete_object meu-bucket documento.pdf
+
+if [ -z "${1:-}" ] || [ -z "${2:-}" ]; then
+    echo "❌ Erro: Argumentos insuficientes"
+    echo "Uso: $0 <nome-do-bucket> <nome-do-arquivo>"
+    echo "Exemplo: $0 meu-bucket documento.pdf"
+    exit 1
+fi
+
+BUCKET_NAME="$1"
+FILE_NAME="$2"
+
+echo "🗑️  Deletando arquivo: $FILE_NAME do bucket: $BUCKET_NAME..."
+
+if aws s3api delete-object --bucket "$BUCKET_NAME" --key "$FILE_NAME" 2>/dev/null; then
+    echo "✅ Arquivo deletado com sucesso!"
+else
+    echo "❌ Erro ao deletar arquivo"
+    exit 1
+fi

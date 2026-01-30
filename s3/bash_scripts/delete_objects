@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+echo "== Delete All Objects from Bucket =="
+
+set -euo pipefail
+
+# Script: Deletar TODOS os objetos de um bucket S3 (esvaziar o bucket)
+# Uso: ./delete_objects <nome-do-bucket>
+# Exemplo: ./delete_objects meu-bucket-para-esvaziar
+# ⚠️  AVISO: Isso REMOVE TODOS os objetos dentro do bucket, mas MANTÉM o bucket!
+
+if [ -z "${1:-}" ]; then
+    echo "❌ Erro: Nome do bucket não informado"
+    echo "Uso: $0 <nome-do-bucket>"
+    echo "Exemplo: $0 meu-bucket-para-esvaziar"
+    exit 1
+fi
+
+BUCKET_NAME="$1"
+
+echo "⚠️  AVISO: Você está prestes a DELETAR TODOS os objetos do bucket: $BUCKET_NAME"
+echo "❌ Esta operação é IRREVERSÍVEL!"
+echo ""
+
+read -p "Digite o nome do bucket para confirmar a exclusão de TODOS os objetos: " CONFIRM
+
+if [ "$CONFIRM" != "$BUCKET_NAME" ]; then
+    echo "❌ Confirmação falhou. Operação cancelada."
+    exit 1
+fi
+
+echo "🗑️  Deletando todos os objetos de: s3://$BUCKET_NAME..."
+
+if aws s3 rm "s3://$BUCKET_NAME" --recursive; then
+    echo "✅ Todos os objetos do bucket deletados com sucesso!"
+else
+    echo "❌ Erro ao deletar objetos do bucket"
+    exit 1
+fi

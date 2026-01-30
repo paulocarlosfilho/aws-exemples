@@ -1,29 +1,9 @@
 #!/usr/bin/env bash
 
-echo "== Sync =="
+echo "== put_objects =="
 
 # Exit immediately if a command exits with a non-zero status
 set -e
-
-
-# Nome do bucket como argumento
-if [ -z "${1:-}" ]; then
-    echo "❌ Erro: Nome do bucket não informado"
-    echo "Uso: $0 <nome-do-bucket>"
-    echo "Exemplo: $0 meu-bucket-unico-12345"
-    exit 1
-fi
-
-# Nome do prefixo do arquivo como argumento
-if [ -z "${1:-}" ]; then
-    echo "❌ Erro: Nome do bucket não informado"
-    echo "Uso: $0 <nome-do-bucket>"
-    echo "Exemplo: $0 meu-bucket-unico-12345"
-    exit 1
-fi
-
-BUCKET_NAME="$1"
-FILE_NAME_PREFIX="$2"
 
 # Script: Criar arquivo de teste para gerar test files
 OUTPUT_DIR="/mnt/c/Users/paulo/Documents/Cursos/aws/aws-exemples/files-aws-put-5"
@@ -45,7 +25,7 @@ NUM_FILES=$((RANDOM % 6 + 5))
 for ((i=1; i<$NUM_FILES; i++)); do
   # Generate a random filename
 
-  FILENAME="$OUTPUT_DIR/${FILE_NAME_PREFIX}$i.txt"
+  FILENAME="$OUTPUT_DIR/file_$i.txt"
 
   # Generate random data and write it to the file
 
@@ -54,5 +34,3 @@ for ((i=1; i<$NUM_FILES; i++)); do
 done
 
 tree $OUTPUT_DIR
-
-aws s3 sync "$OUTPUT_DIR" s3://$BUCKET_NAME/files

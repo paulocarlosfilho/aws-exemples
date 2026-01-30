@@ -1,14 +1,41 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Validação: agora precisamos de DOIS argumentos
-if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Erro: Use assim: ./delete_file_bucket NOME_DO_BUCKET NOME_DO_ARQUIVO"
+# Script: Deletar um bucket S3 inteiro
+# Uso: ./delete_bucket <nome-do-bucket>
+# Exemplo: ./delete_bucket meu-bucket-teste
+# ⚠️  AVISO: Isso REMOVE o bucket e TODO seu conteúdo!
+
+if [ -z "${1:-}" ]; then
+    echo "❌ Erro: Nome do bucket não informado"
+    echo "Uso: $0 <nome-do-bucket>"
+    echo "Exemplo: $0 meu-bucket-teste"
     exit 1
 fi
 
-BUCKET_NAME=$1
-FILE_NAME=$2
+BUCKET_NAME="$1"
 
-echo "Apagando o arquivo $FILE_NAME do bucket $BUCKET_NAME..."
+echo "⚠️  AVISO: Você está prestes a DELETAR o bucket: $BUCKET_NAME"
+echo "❌ Isso vai remover TODOS os arquivos dentro dele!"
+echo ""
 
-aws s3api delete-object --bucket "$BUCKET_NAME" --key "$FILE_NAME"
+read -p "Digite o nome do bucket para confirmar: " CONFIRM
+
+if [ "$CONFIRM" != "$BUCKET_NAME" ]; then
+    echo "❌ Confirmação falhou. Operação cancelada."
+    exit 1
+fi
+
+echo "🗑️  Deletando bucket: $BUCKET_NAME..."
+
+# Primeiro, remove todos os objetos do bucket
+echo "Removendo objetos do bucket..."
+aws s3 rm "s3://$BUCKET_NAME" --recursive 2>/dev/null || true
+
+# Depois, remove o bucket vazio
+if aws s3api delete-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
+    echo "✅ Bucket deletado com sucesso!"
+else
+    echo "❌ Erro ao deletar bucket"
+    exit 1
+fi
