@@ -49,34 +49,72 @@ aws s3 rm s3://nome-do-seu-bucket-unico/nome-da-pasta --recursive
 
 ---
 
-# Usando o powershell
+---
 
-1. Dependências e PowerShell
-```
-apk update
-apk add --no-cache \
-    ca-certificates less ncurses-terminfo-base krb5-libs libgcc \
-    libintl libssl3 libstdc++ tzdata userspace-rcu zlib icu-libs \
-    curl unzip bash gcompat
+## Usando o PowerShell
 
-apk add --no-cache powershell --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+### No Windows
+
+1. **Instalar AWS CLI v2**
+   - Download: https://awscli.amazonaws.com/AWSCLIV2.msi
+   - Ou via winget: `winget install Amazon.AWSCLI`
+
+2. **Configurar credenciais**
+   ```powershell
+   aws configure
+   # Insira Access Key, Secret Key e região (ex: us-east-1)
+   ```
+
+3. **Instalar módulo AWS Tools para S3**
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+   Install-Module -Name AWS.Tools.S3 -Force -Scope CurrentUser
+   Import-Module AWS.Tools.S3
+   ```
+
+4. **Verificar instalação**
+   ```powershell
+   aws sts get-caller-identity
+   Get-S3Bucket
+   ```
+
+### No Linux (Alpine/containers)
+
+1. **Dependências e PowerShell**
+   ```bash
+   apk update
+   apk add --no-cache \
+       ca-certificates less ncurses-terminfo-base krb5-libs libgcc \
+       libintl libssl3 libstdc++ tzdata userspace-rcu zlib icu-libs \
+       curl unzip bash gcompat
+
+   apk add --no-cache powershell --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+   ```
+
+2. **AWS CLI v2**
+   ```bash
+   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   unzip -q awscliv2.zip
+   ./aws/install
+   rm -rf awscliv2.zip aws/
+   ```
+
+3. **AWS Tools + Módulo S3**
+   ```bash
+   pwsh -Command "
+       Set-PSRepository -Name PSGallery -InstallationPolicy Trusted;
+       Install-Module -Name AWS.Tools.Installer -Force -Scope CurrentUser;
+       Install-AWSToolsModule S3 -Force -Scope CurrentUser
+   "
+   ```
+
+### Auto-prompt (Windows PowerShell)
+
+```powershell
+$env:AWS_CLI_AUTO_PROMPT = "on-partial"
 ```
 
-2. AWS CLI v2
-```
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip -q awscliv2.zip
-./aws/install
-rm -rf awscliv2.zip aws/
-```
-3. AWS Tools + Módulo S3 (Já deixa o CRUD pronto)
-```
-pwsh -Command "
-    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted;
-    Install-Module -Name AWS.Tools.Installer -Force -Scope CurrentUser;
-    Install-AWSToolsModule S3 -Force -Scope CurrentUser
-"
-```
 ---
 
 ## IAM & Autenticação
