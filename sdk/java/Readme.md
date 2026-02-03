@@ -20,7 +20,17 @@ mvn archetype:generate \
   -DinteractiveMode=false
 ```
 
-### 2. Adicionar Dependências da AWS no `pom.xml`
+### 2. Criar o Projeto Maven para a AWS
+```bash
+mvn -B archetype:generate \
+ -DarchetypeGroupId=software.amazon.awssdk \
+ -DarchetypeArtifactId=archetype-lambda -Dservice=s3 -Dregion=US_EAST_1 \
+ -DarchetypeVersion=2.41.20 \
+ -DgroupId=com.example.myapp \
+ -DartifactId=myapp
+ ```
+
+### 3. Adicionar Dependências da AWS no `pom.xml`
 Para usar o SDK da AWS, adicione as seguintes dependências ao seu arquivo `pom.xml`, dentro da seção `<dependencies>`:
 
 ```xml
