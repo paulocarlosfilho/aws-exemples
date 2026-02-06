@@ -6,5 +6,11 @@ STACK_NAME="exemplo-s3-paulocarlos"
 
 # Deleta o stack CloudFormation
 # https://docs.aws.amazon.com/cli/latest/reference/cloudformation/delete-stack.html
-aws cloudformation delete-stack \
-    --stack-name $STACK_NAME \
+# Verifica se a stack existe
+if aws cloudformation describe-stacks --stack-name $STACK_NAME > /dev/null 2>&1; then
+    echo "Stack encontrada. Iniciando exclusão..."
+    aws cloudformation delete-stack --stack-name $STACK_NAME
+    echo "Comando de deleção enviado com sucesso."
+else
+    echo "A stack '$STACK_NAME' não existe na AWS. Nada para deletar."
+fi
