@@ -1,7 +1,7 @@
 # Create Bucket
 Import-Module AWS.Tools.S3
 
-$region = "us-west-1"
+$region = "us-east-1"
 
 $bucketName = Read-Host Prompt "Enter the S3 bucket name"
 

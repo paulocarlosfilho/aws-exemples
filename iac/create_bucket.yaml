@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CFN-S3: Cria um único bucket S3 com um nome fornecido como parâmetro.'
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: O nome único para o bucket S3. Nomes de bucket são globais.
+
+Resources:
+  MyS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref BucketName
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: 'ManagedBy'
+          Value: 'CloudFormation'
+
+Outputs:
+  BucketName:
+    Description: 'Nome do bucket S3 criado'
+    Value: !Ref MyS3Bucket

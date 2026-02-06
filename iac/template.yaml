@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A simple Bucket
+Resources:
+  S3Bucket:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3-bucket.html
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: exemplo-s3-paulocarlos
+
+# Na hora de criar o projeto para Java, vc acha a versão aqui.
+# https://central.sonatype.com/artifact/software.amazon.awssdk/archetype-lambda

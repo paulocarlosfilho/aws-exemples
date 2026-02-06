@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echo "== Deploy S3 Bucket Via CFN =="
+
+STACK_NAME="exemplo-s3-paulocarlos"
+
+# Criando o stack CloudFormation
+aws cloudformation deploy \
+  --template-file ./template.yaml \
+  --stack-name $STACK_NAME \
+  --region us-east-1 \
+  --capabilities CAPABILITY_NAMED_IAM
